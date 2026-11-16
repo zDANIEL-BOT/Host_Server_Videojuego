@@ -1,0 +1,17 @@
+# Archivos de configuración con credenciales
+.env
+
+# Archivos generados por .NET
+bin/
+obj/
+
+# Archivos de Git
+.git/
+
+# Configuración de IDE
+.vs/
+.idea/
+
+# Archivos temporales
+*.user
+*.suo
