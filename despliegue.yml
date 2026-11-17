@@ -1,0 +1,40 @@
+services:
+
+  api:
+    image: zdanielxbot/hosting-servidores-videojuegos:1.0
+    container_name: hosting_api
+    ports:
+      - "${API_PORT}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hosting_red
+
+  postgres:
+    image: postgres:17
+    container_name: hosting_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_datos:/var/lib/postgresql/data
+    networks:
+      - hosting_red
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  hosting_red:
+    driver: bridge
+
+volumes:
+  postgres_datos:
