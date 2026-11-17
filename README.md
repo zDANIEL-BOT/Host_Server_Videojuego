@@ -71,3 +71,36 @@ docker compose --env-file .env -f constructor.yml exec -T postgres sh -c 'psql -
 ```
 
 **Verificación:** las implementaciones fueron compiladas y probadas mediante solicitudes HTTP utilizando Scalar, verificando las respuestas de los endpoints y la persistencia de datos en PostgreSQL.
+
+## Uso de inteligencia artificial
+
+Se utilizó ChatGPT como herramienta de apoyo para preparar el archivo `despliegue.yml`, siguiendo el requisito de ejecutar el backend mediante una imagen previamente publicada en Docker Hub, sin necesidad de compilar el código fuente.
+
+### Consulta realizada
+
+Se consultó a la IA cómo configurar un archivo Docker Compose que permitiera:
+
+- Ejecutar el backend utilizando la imagen `zdanielxbot/hosting-servidores-videojuegos:1.0`.
+- Iniciar un contenedor de PostgreSQL.
+- Configurar las variables de entorno para la conexión entre la API y la base de datos.
+- Configurar una red compartida entre ambos servicios.
+- Utilizar un volumen persistente para los datos de PostgreSQL.
+- Esperar a que PostgreSQL estuviera saludable antes de iniciar la API.
+
+### Verificación de la propuesta
+
+La configuración sugerida fue revisada y probada mediante los siguientes procedimientos:
+
+1. Se validó la sintaxis y configuración del archivo con `docker compose config`.
+2. Se descargó la imagen publicada desde Docker Hub utilizando `docker compose pull api`.
+3. Se inició PostgreSQL mediante el archivo `despliegue.yml`.
+4. Se aplicó el script SQL de migraciones para crear las tablas necesarias en la base de datos nueva.
+5. Se inició el backend utilizando la imagen descargada, sin ejecutar `docker build` ni compilar el código fuente.
+6. Se verificó el estado de los contenedores y sus registros mediante `docker compose ps` y `docker compose logs api`.
+7. Se accedió a Scalar y se probaron las operaciones CRUD de usuarios.
+
+Como resultado, se comprobó que la API podía ejecutarse utilizando la imagen publicada en Docker Hub y conectarse correctamente con PostgreSQL, sin depender de la compilación del código fuente local.
+
+### Herramienta utilizada
+
+- ChatGPT: asistencia en la elaboración, revisión y explicación de la configuración Docker Compose.
